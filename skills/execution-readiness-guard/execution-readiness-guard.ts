@@ -1,86 +1,139 @@
-type RouteOperatorRecord = {
-  decision?: string;
-  protocol?: string;
-} | null;
+declare const Bun: {
+  argv: string[];
+  stdin: {
+    text: () => Promise<string>;
+  };
+};
 
-type HealthRecord = {
+type RouteOperator = {
+  decision?: string;
+  reason?: string;
+  protocol?: string;
+};
+
+type RouteHealth = {
   status?: string;
   reason?: string;
-} | null;
+};
 
-type ScoreRecord = {
+type RouteScore = {
   status?: string;
   reason?: string;
   score?: number;
-} | null;
+};
 
 type State = {
-  routeOperatorByRoute?: Record<string, RouteOperatorRecord>;
-  routeHealthByRoute?: Record<string, HealthRecord>;
-  protocolHealthByProtocol?: Record<string, HealthRecord>;
-  routeScoreByRoute?: Record<string, ScoreRecord>;
+  routeOperatorByRoute?: Record<string, RouteOperator | undefined>;
+  routeHealthByRoute?: Record<string, RouteHealth | undefined>;
+  protocolHealthByProtocol?: Record<string, RouteHealth | undefined>;
+  routeScoreByRoute?: Record<string, RouteScore | undefined>;
 };
 
 type Input = {
-  route: string;
-  state: State;
+  route?: string;
+  state?: State;
 };
 
-type Readiness = 'healthy' | 'degraded' | 'blocked';
+type Readiness = 'ready' | 'degraded' | 'blocked' | 'unknown';
 
-type SuccessOutput = {
+type Output =
+  | {
+      ok: true;
+      skill: 'execution-readiness-guard';
+      route: string;
+      readiness: Readiness;
+      eligible: boolean;
+      reason: string;
+    }
+  | {
+      ok: false;
+      skill: 'execution-readiness-guard';
+      error: 'INVALID_INPUT' | 'MISSING_ROUTE' | 'INVALID_STATE';
+    };
+
+type DoctorOutput = {
   ok: true;
-  route: string;
-  readiness: Readiness;
-  eligible: boolean;
-  reason: string;
+  skill: 'execution-readiness-guard';
+  command: 'doctor';
+  status: 'ready';
+  checks: {
+    runtime: 'bun';
+    deterministic: true;
+    writeActions: false;
+    inputMode: 'stdin-json';
+  };
 };
 
-type ErrorOutput = {
-  ok: false;
-  error: 'INVALID_INPUT';
-};
-
-function isNonEmptyString(value: unknown): value is string {
-  return typeof value === 'string' && value.trim().length > 0;
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
 }
 
-function evaluateReadiness(input: Input): SuccessOutput {
-  const route = input.route;
-  const state = input.state ?? {};
+function buildUnknown(route: string, reason: string): Output {
+  return {
+    ok: true,
+    skill: 'execution-readiness-guard',
+    route,
+    readiness: 'unknown',
+    eligible: false,
+    reason
+  };
+}
 
-  const routeOperator = state.routeOperatorByRoute?.[route];
-  const protocol = routeOperator?.protocol;
+function buildDecision(state: State, route: string): Output {
+  const routeOperator = state.routeOperatorByRoute?.[route] ?? null;
+  const routeHealth = state.routeHealthByRoute?.[route] ?? null;
+  const routeScore = state.routeScoreByRoute?.[route] ?? null;
 
-  const routeHealth = state.routeHealthByRoute?.[route];
-  const protocolHealth = protocol
-    ? state.protocolHealthByProtocol?.[protocol]
-    : undefined;
-  const routeScore = state.routeScoreByRoute?.[route];
+  if (!routeOperator) {
+    return buildUnknown(route, 'MISSING_ROUTE_OPERATOR');
+  }
 
-  if (!routeOperator || routeOperator.decision !== 'ALLOW') {
+  if (!routeHealth) {
+    return buildUnknown(route, 'MISSING_ROUTE_HEALTH');
+  }
+
+  if (!routeScore) {
+    return buildUnknown(route, 'MISSING_ROUTE_SCORE');
+  }
+
+  const protocol = routeOperator.protocol ?? null;
+
+  if (!protocol || protocol.trim() === '') {
+    return buildUnknown(route, 'MISSING_PROTOCOL_REFERENCE');
+  }
+
+  const protocolHealth = state.protocolHealthByProtocol?.[protocol] ?? null;
+
+  if (!protocolHealth) {
+    return buildUnknown(route, 'MISSING_PROTOCOL_HEALTH');
+  }
+
+  if (routeOperator.decision === 'BLOCK') {
     return {
       ok: true,
+      skill: 'execution-readiness-guard',
       route,
       readiness: 'blocked',
       eligible: false,
-      reason: 'ROUTE_NOT_ALLOWED'
+      reason: routeOperator.reason || 'ROUTE_OPERATOR_BLOCKED'
     };
   }
 
-  if (routeHealth?.status === 'blocked') {
+  if (routeHealth.status === 'blocked') {
     return {
       ok: true,
+      skill: 'execution-readiness-guard',
       route,
       readiness: 'blocked',
       eligible: false,
-      reason: routeHealth.reason || 'ROUTE_BLOCKED'
+      reason: routeHealth.reason || 'ROUTE_HEALTH_BLOCKED'
     };
   }
 
-  if (protocolHealth?.status === 'blocked') {
+  if (protocolHealth.status === 'blocked') {
     return {
       ok: true,
+      skill: 'execution-readiness-guard',
       route,
       readiness: 'blocked',
       eligible: false,
@@ -88,68 +141,103 @@ function evaluateReadiness(input: Input): SuccessOutput {
     };
   }
 
-  if (routeScore?.status === 'degraded') {
+  if (routeScore.status === 'degraded') {
     return {
       ok: true,
+      skill: 'execution-readiness-guard',
       route,
       readiness: 'degraded',
       eligible: false,
-      reason: routeScore.reason || 'ROUTE_UNDERPERFORMING'
+      reason: routeScore.reason || 'ROUTE_SCORE_DEGRADED'
     };
   }
 
   return {
     ok: true,
+    skill: 'execution-readiness-guard',
     route,
-    readiness: 'healthy',
+    readiness: 'ready',
     eligible: true,
-    reason: 'READY'
+    reason: 'EXECUTION_READY'
+  };
+}
+
+function buildError(error: Output['error']): Output {
+  return {
+    ok: false,
+    skill: 'execution-readiness-guard',
+    error
   };
 }
 
 function parseInput(raw: string): Input {
-  const parsed = JSON.parse(raw) as Partial<Input>;
-
-  if (
-    !parsed ||
-    !isNonEmptyString(parsed.route) ||
-    typeof parsed.state !== 'object' ||
-    parsed.state === null
-  ) {
+  if (!raw.trim()) {
     throw new Error('INVALID_INPUT');
   }
 
+  const parsed = JSON.parse(raw) as unknown;
+
+  if (!isObject(parsed)) {
+    throw new Error('INVALID_INPUT');
+  }
+
+  return parsed as Input;
+}
+
+function run(input: Input): Output {
+  if (typeof input.route !== 'string' || input.route.trim() === '') {
+    return buildError('MISSING_ROUTE');
+  }
+
+  if (!isObject(input.state)) {
+    return buildError('INVALID_STATE');
+  }
+
+  return buildDecision(input.state as State, input.route);
+}
+
+function doctor(): DoctorOutput {
   return {
-    route: parsed.route,
-    state: parsed.state as State
+    ok: true,
+    skill: 'execution-readiness-guard',
+    command: 'doctor',
+    status: 'ready',
+    checks: {
+      runtime: 'bun',
+      deterministic: true,
+      writeActions: false,
+      inputMode: 'stdin-json'
+    }
   };
 }
 
-function main(): void {
-  let input = '';
+async function main(): Promise<void> {
+  try {
+    const command = Bun.argv[2] || 'run';
 
-  process.stdin.setEncoding('utf8');
+    if (command === 'doctor') {
+      console.log(JSON.stringify(doctor()));
+      return;
+    }
 
-  process.stdin.on('data', (chunk: string) => {
-    input += chunk;
-  });
+    if (command !== 'run') {
+      console.log(JSON.stringify(buildError('INVALID_INPUT')));
+      process.exitCode = 1;
+      return;
+    }
 
-  process.stdin.on('end', () => {
-    try {
-      const parsed = parseInput(input);
-      const result = evaluateReadiness(parsed);
-      console.log(JSON.stringify(result));
-    } catch {
-      const errorResult: ErrorOutput = {
-        ok: false,
-        error: 'INVALID_INPUT'
-      };
-      console.error(JSON.stringify(errorResult));
+    const raw = await Bun.stdin.text();
+    const input = parseInput(raw);
+    const result = run(input);
+    console.log(JSON.stringify(result));
+
+    if (!result.ok) {
       process.exitCode = 1;
     }
-  });
-
-  process.stdin.resume();
+  } catch {
+    console.log(JSON.stringify(buildError('INVALID_INPUT')));
+    process.exitCode = 1;
+  }
 }
 
-main();
+void main();

@@ -1,14 +1,20 @@
-# Execution Readiness Guard
+# Agent Behavior - Execution Readiness Guard
 
-## Purpose
+## Decision order
 
-This skill evaluates whether a route is eligible for execution based on operational state.
+1. Run `doctor` first. If it fails, stop and surface the blocker.
+2. Run `run` with a route and shared state payload.
+3. Parse the JSON output.
+4. Treat `eligible: false` as non-executable without inventing missing data.
 
-It acts as a deterministic execution gating layer that converts raw state into a strict readiness decision.
+## Guardrails
 
-This skill does not execute actions.
+- Never assume missing route state is safe.
+- Never reinterpret `routeOperator.status`; this skill only uses `routeOperator.decision`.
+- Never convert `unknown` or `degraded` into executable state without an external policy layer.
+- Keep the skill read-only and deterministic for the same input.
 
-## Decision Model
+## Decision model
 
 Evaluation follows a strict ordered pipeline:
 
@@ -19,74 +25,39 @@ Evaluation follows a strict ordered pipeline:
 
 The first blocking condition terminates evaluation immediately.
 
-## Decision Contract
+## Output contract
 
-- `routeOperator.decision === "BLOCK"` blocks the route at operator level
-- `routeHealth.status === "blocked"` blocks the route
-- `protocolHealth.status === "blocked"` blocks the protocol
-- `routeScore.status === "degraded"` marks execution as degraded
+Return structured JSON every time.
 
-Important:
-
-- This skill does not use `routeOperator.status`
-- Only `routeOperator.decision` is considered for operator-level blocking
-- Missing or undefined fields must never be assumed safe
-
-## Decision Outcomes
-
-### Blocked
-
-Execution must be denied if any of the following conditions are met:
-
-- `routeOperator.decision === "BLOCK"`
-- `routeHealth.status === "blocked"`
-- `protocolHealth.status === "blocked"`
-
-### Degraded
-
-Execution is not eligible but not fully blocked when:
-
-- `routeScore.status === "degraded"`
-
-### Ready
-
-Execution is eligible only when:
-
-- no blocked condition is present
-- no degraded condition is present
-- all required state inputs are valid
-
-### Unknown
-
-Evaluation returns `unknown` with `eligible: false` when required route-specific state is missing:
-
-- route operator
-- route health
-- protocol reference
-- protocol health
-- route score
-
-## Safety Guarantees
-
-- Blocked routes are never eligible.
-- Degraded routes are never treated as safe.
-- Missing or invalid data is never assumed safe.
-- Output is deterministic for the same input.
-- No side effects or execution are performed by the skill contract.
-
-## Output Contract
-
-The skill returns strict JSON with:
-
-- `ok`
-- `skill`
-- `route` when evaluation runs
-- `readiness`
-- `eligible`
-- `reason`
+```json
+{
+  "ok": true,
+  "skill": "execution-readiness-guard",
+  "route": "hbtc_to_btc_l1",
+  "readiness": "ready | degraded | blocked | unknown",
+  "eligible": true,
+  "reason": "EXECUTION_READY"
+}
+```
 
 Invalid top-level input returns:
 
-- `ok: false`
-- `skill: "execution-readiness-guard"`
-- `error`
+```json
+{
+  "ok": false,
+  "skill": "execution-readiness-guard",
+  "error": "INVALID_INPUT | MISSING_ROUTE | INVALID_STATE"
+}
+```
+
+## On error
+
+- Surface the JSON error directly.
+- Do not retry silently.
+- Require corrected input or corrected upstream state.
+
+## On success
+
+- Use `readiness`, `eligible`, and `reason` exactly as returned.
+- Preserve the reason for downstream auditability.
+- Do not treat the result as an execution command; it is only a gating decision.
