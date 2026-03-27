@@ -1,0 +1,4 @@
+﻿Day 2 — 2026-03-26
+Skill: execution-readiness-guard
+PR: https://github.com/luizinhotec/bff-skills/pull/1
+Status: SUBMITTED
