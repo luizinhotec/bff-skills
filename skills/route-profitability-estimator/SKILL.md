@@ -92,7 +92,7 @@ Decision rules:
   "skill": "route-profitability-estimator",
   "route": "sbtc_to_usdc",
   "profitable": false,
-  "netOut": 96500,
+  "netOut": 97200,
   "costs": {
     "fee": 300,
     "slippage": 500
@@ -102,7 +102,7 @@ Decision rules:
     "routeProfitabilityByRoute": {
       "sbtc_to_usdc": {
         "profitable": false,
-        "netOut": 96500,
+        "netOut": 97200,
         "evaluatedAt": "2026-03-27T00:00:00.000Z"
       }
     }
@@ -123,7 +123,7 @@ Written shape:
 ```json
 {
   "profitable": false,
-  "netOut": 96500,
+  "netOut": 97200,
   "evaluatedAt": "2026-03-27T00:00:00.000Z"
 }
 ```
