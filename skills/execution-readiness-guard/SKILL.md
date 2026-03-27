@@ -1,81 +1,58 @@
 ---
 name: execution-readiness-guard
-description: Deterministic execution gating skill that classifies a route as ready, degraded, blocked, or unknown using operator, route health, protocol health, and route score signals.
+description: Deterministic, isolated, reusable execution readiness evaluation skill.
+author: luizinhotec
+author_agent: Codex
+user-invocable: false
+arguments: run
+entry: execution-readiness-guard/index.cjs
+requires: [state]
 tags:
   - execution
-  - safety
-  - routing
+  - infrastructure
+  - read-only
+  - deterministic
+  - state-driven
 ---
 
 # Execution Readiness Guard
 
-## Overview
+## Responsabilidade
 
-Execution Readiness Guard is an isolated, reusable skill that determines whether a route is eligible for execution.
+Avaliar uma rota e classifica-la como `ready`, `degraded`, `blocked` ou `unknown`.
 
-It evaluates four decision layers in strict order:
+## Design principles
 
-1. route operator decision
-2. route health
-3. protocol health
-4. route score
-
-The skill returns a deterministic readiness result:
-
-- `ready`
-- `degraded`
-- `blocked`
-- `unknown`
-
-Missing or invalid data is never assumed safe.
-
-## Decision Contract
-
-- `routeOperator.decision === "BLOCK"` blocks the route at operator level
-- `routeHealth.status === "blocked"` blocks the route
-- `protocolHealth.status === "blocked"` blocks the protocol
-- `routeScore.status === "degraded"` marks execution as degraded
-
-Important:
-
-- This skill does not use `routeOperator.status`
-- Only `routeOperator.decision` is considered for operator-level blocking
-- Missing or undefined fields must never be assumed safe
+- isolated
+- composable
+- reusable
+- deterministic
+- no logic in runtime
+- state-driven decisions
 
 ## Input
 
 ```json
 {
-  "route": "hbtc_to_btc_l1",
-  "state": {
-    "routeOperatorByRoute": {
-      "hbtc_to_btc_l1": {
-        "decision": "ALLOW",
-        "protocol": "hermetica"
-      }
-    },
-    "routeHealthByRoute": {
-      "hbtc_to_btc_l1": {
-        "status": "healthy",
-        "reason": "ROUTE_CLEAR"
-      }
-    },
-    "protocolHealthByProtocol": {
-      "hermetica": {
-        "status": "healthy",
-        "reason": "PROTOCOL_CLEAR"
-      }
-    },
-    "routeScoreByRoute": {
-      "hbtc_to_btc_l1": {
-        "status": "healthy",
-        "reason": "ROUTE_SCORE_OK",
-        "score": 90
-      }
-    }
-  }
+  "input": {
+    "route": "hbtc_to_btc_l1"
+  },
+  "state": {}
 }
 ```
+
+## Processing
+
+Fluxo interno da skill:
+
+`input -> processing -> output -> state`
+
+Ordem de avaliacao:
+
+1. route operator decision
+2. route health
+3. protocol health
+4. route score
 
 ## Output
 
@@ -83,11 +60,41 @@ Important:
 {
   "ok": true,
   "skill": "execution-readiness-guard",
-  "route": "hbtc_to_btc_l1",
-  "readiness": "ready",
-  "eligible": true,
-  "reason": "EXECUTION_READY"
+  "decision": {
+    "route": "hbtc_to_btc_l1",
+    "readiness": "ready",
+    "eligible": true,
+    "reason": "EXECUTION_READY",
+    "decidedAt": "2026-03-27T00:00:00.000Z"
+  },
+  "stateUpdates": {},
+  "auditEntry": {}
 }
 ```
 
-If required data is missing, the skill returns `unknown` with `eligible: false` when evaluation can still proceed for the provided route, or an explicit top-level error when `route` or `state` is invalid.
+## Leitura de estado
+
+- `routeOperatorByRoute`
+- `routeHealthByRoute`
+- `protocolHealthByProtocol`
+- `routeScoreByRoute`
+
+## Escrita de estado
+
+- `executionReadinessByRoute.<route>`
+- `lastExecutionReadinessDecision`
+
+## Examples
+
+- `examples/ready-input.json`
+- `examples/degraded-input.json`
+- `examples/blocked-input.json`
+- `test-input.json`
+
+## Determinismo
+
+A decisao depende apenas de `input.route`, do estado compartilhado e de `now`.
+
+## Efeitos colaterais
+
+Nenhum. Esta skill apenas transforma estado em decisao rastreavel.
