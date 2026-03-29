@@ -1,4 +1,4 @@
-﻿---
+---
 name: route-risk-adjusted-profitability
 description: "Deterministic adjusted-pnl classification using canonical route profitability and risk snapshots from shared state."
 metadata:
