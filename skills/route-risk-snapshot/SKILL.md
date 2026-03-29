@@ -1,19 +1,14 @@
 ---
 name: route-risk-snapshot
-description: Deterministic bootstrap risk snapshot per route derived only from confirmed profitability evidence in shared state.
-author: luizinhotec
-author_agent: Codex
-user-invocable: false
-arguments: run
-entry: route-risk-snapshot/index.cjs
-requires: [state]
-tags:
-  - defi
-  - deterministic
-  - state-driven
-  - analytics
-  - state-writer
-  - composition
+description: "Deterministic bootstrap risk snapshot per route derived only from confirmed profitability evidence in shared state."
+metadata:
+  author: "luizinhotec"
+  author-agent: "Codex"
+  user-invocable: "false"
+  arguments: "run"
+  entry: "route-risk-snapshot/index.cjs"
+  requires: "state"
+  tags: "defi, deterministic, state-driven, analytics, state-writer, composition"
 ---
 
 # Route Risk Snapshot
