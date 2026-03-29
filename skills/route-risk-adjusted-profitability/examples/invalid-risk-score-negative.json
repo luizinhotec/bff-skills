@@ -1,0 +1,19 @@
+{
+  "input": {
+    "route": "invalid_negative_risk"
+  },
+  "state": {
+    "routeProfitabilityByRoute": {
+      "invalid_negative_risk": {
+        "accountingUnit": "usd_cents",
+        "pnl": 400
+      }
+    },
+    "routeRiskByRoute": {
+      "invalid_negative_risk": {
+        "riskScore": -0.1
+      }
+    }
+  },
+  "now": "2026-03-28T00:00:00.000Z"
+}

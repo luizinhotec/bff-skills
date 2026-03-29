@@ -1,0 +1,50 @@
+{
+  "ok": true,
+  "skill": "route-risk-adjusted-profitability",
+  "schemaVersion": "1.0.0",
+  "decision": {
+    "route": "high_risk_route",
+    "status": "REJECT",
+    "reason": "ADJUSTED_PNL_NOT_POSITIVE",
+    "eligible": false,
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  },
+  "metrics": {
+    "accountingUnit": "usd_cents",
+    "pnl": 500,
+    "riskScore": 1,
+    "riskPenaltyBps": 10000,
+    "adjustedPnl": 0,
+    "threshold": 100
+  },
+  "stateUpdates": {
+    "routeRiskAdjustedProfitabilityByRoute": {
+      "high_risk_route": {
+        "schemaVersion": "1.0.0",
+        "route": "high_risk_route",
+        "accountingUnit": "usd_cents",
+        "pnl": 500,
+        "riskScore": 1,
+        "riskPenaltyBps": 10000,
+        "adjustedPnl": 0,
+        "threshold": 100,
+        "status": "REJECT",
+        "reason": "ADJUSTED_PNL_NOT_POSITIVE",
+        "eligible": false,
+        "evaluatedAt": "2026-03-28T00:00:00.000Z"
+      }
+    }
+  },
+  "auditEntry": {
+    "skill": "route-risk-adjusted-profitability",
+    "schemaVersion": "1.0.0",
+    "route": "high_risk_route",
+    "status": "REJECT",
+    "reason": "ADJUSTED_PNL_NOT_POSITIVE",
+    "eligible": false,
+    "adjustedPnl": 0,
+    "riskPenaltyBps": 10000,
+    "accountingUnit": "usd_cents",
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "input": {
+    "route": "high_risk_route"
+  },
+  "state": {
+    "routeProfitabilityByRoute": {
+      "high_risk_route": {
+        "accountingUnit": "usd_cents",
+        "pnl": 500
+      }
+    },
+    "routeRiskByRoute": {
+      "high_risk_route": {
+        "riskScore": 1
+      }
+    }
+  },
+  "now": "2026-03-28T00:00:00.000Z"
+}

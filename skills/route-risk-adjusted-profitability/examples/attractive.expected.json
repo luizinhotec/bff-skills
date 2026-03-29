@@ -1,0 +1,50 @@
+{
+  "ok": true,
+  "skill": "route-risk-adjusted-profitability",
+  "schemaVersion": "1.0.0",
+  "decision": {
+    "route": "sbtc_to_usdc",
+    "status": "ATTRACTIVE",
+    "reason": "ADJUSTED_PNL_MEETS_THRESHOLD",
+    "eligible": true,
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  },
+  "metrics": {
+    "accountingUnit": "usd_cents",
+    "pnl": 500,
+    "riskScore": 0.5,
+    "riskPenaltyBps": 5000,
+    "adjustedPnl": 250,
+    "threshold": 100
+  },
+  "stateUpdates": {
+    "routeRiskAdjustedProfitabilityByRoute": {
+      "sbtc_to_usdc": {
+        "schemaVersion": "1.0.0",
+        "route": "sbtc_to_usdc",
+        "accountingUnit": "usd_cents",
+        "pnl": 500,
+        "riskScore": 0.5,
+        "riskPenaltyBps": 5000,
+        "adjustedPnl": 250,
+        "threshold": 100,
+        "status": "ATTRACTIVE",
+        "reason": "ADJUSTED_PNL_MEETS_THRESHOLD",
+        "eligible": true,
+        "evaluatedAt": "2026-03-28T00:00:00.000Z"
+      }
+    }
+  },
+  "auditEntry": {
+    "skill": "route-risk-adjusted-profitability",
+    "schemaVersion": "1.0.0",
+    "route": "sbtc_to_usdc",
+    "status": "ATTRACTIVE",
+    "reason": "ADJUSTED_PNL_MEETS_THRESHOLD",
+    "eligible": true,
+    "adjustedPnl": 250,
+    "riskPenaltyBps": 5000,
+    "accountingUnit": "usd_cents",
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  }
+}

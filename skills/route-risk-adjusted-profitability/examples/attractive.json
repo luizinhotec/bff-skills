@@ -1,0 +1,19 @@
+{
+  "input": {
+    "route": "sbtc_to_usdc"
+  },
+  "state": {
+    "routeProfitabilityByRoute": {
+      "sbtc_to_usdc": {
+        "accountingUnit": "usd_cents",
+        "pnl": 500
+      }
+    },
+    "routeRiskByRoute": {
+      "sbtc_to_usdc": {
+        "riskScore": 0.5
+      }
+    }
+  },
+  "now": "2026-03-28T00:00:00.000Z"
+}

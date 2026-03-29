@@ -1,0 +1,13 @@
+{
+  "input": {
+    "route": "missing_profitability_route"
+  },
+  "state": {
+    "routeRiskByRoute": {
+      "missing_profitability_route": {
+        "riskScore": 0.4
+      }
+    }
+  },
+  "now": "2026-03-28T00:00:00.000Z"
+}
