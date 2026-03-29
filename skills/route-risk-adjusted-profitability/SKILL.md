@@ -28,6 +28,27 @@ Downstream consumers need a normalized profitability-under-risk signal to avoid 
 - does not mutate runtime orchestration logic
 - missing snapshots are treated as UNKNOWN, not as failures
 - all inputs are validated before computation
+## Commands
+
+### run
+Evaluates the risk-adjusted profitability for a given route using canonical shared state.
+`ash
+node skills/route-risk-adjusted-profitability/index.cjs <input.json>
+`
+
+## Output contract
+
+All outputs are JSON to stdout.
+
+**Success:**
+`json
+{"ok":true,"skill":"route-risk-adjusted-profitability","schemaVersion":"1.0.0","decision":{"route":"sbtc_to_usdc","status":"ATTRACTIVE","reason":"ADJUSTED_PNL_MEETS_THRESHOLD","eligible":true},"metrics":{"pnl":500,"riskScore":0.5,"riskPenaltyBps":5000,"adjustedPnl":250}}
+`
+
+**Error:**
+`json
+{"ok":false,"skill":"route-risk-adjusted-profitability","schemaVersion":"1.0.0","error":"INVALID_PNL"}
+`
 ## Input Contract
 
 This skill accepts only the catalog wrapper payload.
@@ -226,6 +247,7 @@ Run implementation directly:
 ```bash
 node skills/route-risk-adjusted-profitability/index.cjs skills/route-risk-adjusted-profitability/examples/attractive.json
 ```
+
 
 
 
