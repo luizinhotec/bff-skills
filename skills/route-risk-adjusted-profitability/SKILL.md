@@ -20,6 +20,14 @@ Transform one route `pnl` snapshot into one deterministic `adjustedPnl` decision
 This skill does not call another skill.
 It consumes canonical shared-state snapshots only.
 
+## Why agents need it
+Downstream consumers need a normalized profitability-under-risk signal to avoid allocating capital to high-risk routes that appear attractive on gross PnL alone. This skill provides that signal deterministically from canonical shared state, without hidden logic or runtime dependencies.
+
+## Safety notes
+- does not execute routes or transactions
+- does not mutate runtime orchestration logic
+- missing snapshots are treated as UNKNOWN, not as failures
+- all inputs are validated before computation
 ## Input Contract
 
 This skill accepts only the catalog wrapper payload.
@@ -220,8 +228,5 @@ node skills/route-risk-adjusted-profitability/index.cjs skills/route-risk-adjust
 ```
 
 
-## Why agents need it
-Downstream consumers need a normalized profitability-under-risk signal.
 
-## Safety notes
-Does not execute routes or transactions. Missing snapshots treated as UNKNOWN.
+
