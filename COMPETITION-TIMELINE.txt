@@ -10,8 +10,8 @@ Status: SUBMITTED
 
 Day 4 - 2026-03-28
 Skill: route-risk-snapshot
-PR: not opened
-Status: APPROVED / ARCHITECTURE FROZEN / NOT SUBMITTED
+PR: https://github.com/BitflowFinance/bff-skills/pull/69
+Status: SUBMITTED
 
 Day 5 - planned
 Skill: route-risk-adjusted-profitability

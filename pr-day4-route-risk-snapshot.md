@@ -6,7 +6,7 @@ Final status:
 - implementation complete
 - local validation passed
 - submission text ready for internal review
-- PR not opened yet
+- PR opened: https://github.com/BitflowFinance/bff-skills/pull/69
 
 Suggested compare:
 - base: `competition/main`
