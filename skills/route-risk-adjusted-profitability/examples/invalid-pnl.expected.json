@@ -1,0 +1,9 @@
+{
+  "ok": false,
+  "skill": "route-risk-adjusted-profitability",
+  "schemaVersion": "1.0.0",
+  "error": "INVALID_PNL",
+  "details": {
+    "route": "invalid_pnl_route"
+  }
+}

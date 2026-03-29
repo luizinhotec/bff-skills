@@ -1,0 +1,50 @@
+{
+  "ok": true,
+  "skill": "route-risk-adjusted-profitability",
+  "schemaVersion": "1.0.0",
+  "decision": {
+    "route": "small_edge_route",
+    "status": "LOW_ATTRACTIVENESS",
+    "reason": "ADJUSTED_PNL_BELOW_THRESHOLD",
+    "eligible": false,
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  },
+  "metrics": {
+    "accountingUnit": "usd_cents",
+    "pnl": 80,
+    "riskScore": 0.2,
+    "riskPenaltyBps": 2000,
+    "adjustedPnl": 64,
+    "threshold": 100
+  },
+  "stateUpdates": {
+    "routeRiskAdjustedProfitabilityByRoute": {
+      "small_edge_route": {
+        "schemaVersion": "1.0.0",
+        "route": "small_edge_route",
+        "accountingUnit": "usd_cents",
+        "pnl": 80,
+        "riskScore": 0.2,
+        "riskPenaltyBps": 2000,
+        "adjustedPnl": 64,
+        "threshold": 100,
+        "status": "LOW_ATTRACTIVENESS",
+        "reason": "ADJUSTED_PNL_BELOW_THRESHOLD",
+        "eligible": false,
+        "evaluatedAt": "2026-03-28T00:00:00.000Z"
+      }
+    }
+  },
+  "auditEntry": {
+    "skill": "route-risk-adjusted-profitability",
+    "schemaVersion": "1.0.0",
+    "route": "small_edge_route",
+    "status": "LOW_ATTRACTIVENESS",
+    "reason": "ADJUSTED_PNL_BELOW_THRESHOLD",
+    "eligible": false,
+    "adjustedPnl": 64,
+    "riskPenaltyBps": 2000,
+    "accountingUnit": "usd_cents",
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  }
+}

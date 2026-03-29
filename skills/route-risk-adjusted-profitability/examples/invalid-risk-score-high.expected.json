@@ -1,0 +1,9 @@
+{
+  "ok": false,
+  "skill": "route-risk-adjusted-profitability",
+  "schemaVersion": "1.0.0",
+  "error": "INVALID_RISK_SCORE",
+  "details": {
+    "route": "invalid_high_risk"
+  }
+}
