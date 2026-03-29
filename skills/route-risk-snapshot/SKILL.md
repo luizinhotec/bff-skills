@@ -1,4 +1,4 @@
----
+﻿---
 name: route-risk-snapshot
 description: "Deterministic bootstrap risk snapshot per route derived only from confirmed profitability evidence in shared state."
 metadata:
@@ -13,7 +13,7 @@ metadata:
 
 # Route Risk Snapshot
 
-## Responsibility
+## What it does
 
 Produce one canonical, minimal and deterministic risk snapshot per route for downstream consumption.
 
@@ -203,7 +203,7 @@ The initial implementation contains only:
 
 It must not become an open-ended bag of ad hoc fields.
 
-## Reuse And Composition
+## Why agents need it
 
 Downstream consumers can use:
 
@@ -214,7 +214,7 @@ Downstream consumers can use:
 
 This skill exists to produce the upstream contract that a future consumer can read without inventing hidden logic.
 
-## What This Skill Does Not Do
+## Safety notes
 
 - execute routes
 - block execution
@@ -256,3 +256,4 @@ Run implementation directly:
 ```bash
 node skills/route-risk-snapshot/index.cjs skills/route-risk-snapshot/examples/medium-risk.json
 ```
+
