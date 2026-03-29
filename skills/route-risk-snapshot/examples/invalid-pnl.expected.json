@@ -1,0 +1,9 @@
+{
+  "ok": false,
+  "skill": "route-risk-snapshot",
+  "schemaVersion": "1.0.0",
+  "error": "INVALID_PNL",
+  "details": {
+    "route": "sbtc_to_usdc"
+  }
+}

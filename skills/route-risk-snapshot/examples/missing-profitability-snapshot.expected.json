@@ -1,0 +1,38 @@
+{
+  "ok": true,
+  "skill": "route-risk-snapshot",
+  "schemaVersion": "1.0.0",
+  "snapshot": {
+    "route": "missing_route",
+    "riskScore": null,
+    "riskLevel": "UNKNOWN",
+    "signals": {
+      "profitabilitySignal": "MISSING_PROFITABILITY_SNAPSHOT"
+    },
+    "reason": "MISSING_PROFITABILITY_SNAPSHOT",
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  },
+  "stateUpdates": {
+    "routeRiskByRoute": {
+      "missing_route": {
+        "schemaVersion": "1.0.0",
+        "route": "missing_route",
+        "riskScore": null,
+        "riskLevel": "UNKNOWN",
+        "signals": {
+          "profitabilitySignal": "MISSING_PROFITABILITY_SNAPSHOT"
+        },
+        "reason": "MISSING_PROFITABILITY_SNAPSHOT",
+        "evaluatedAt": "2026-03-28T00:00:00.000Z"
+      }
+    }
+  },
+  "auditEntry": {
+    "skill": "route-risk-snapshot",
+    "schemaVersion": "1.0.0",
+    "route": "missing_route",
+    "riskLevel": "UNKNOWN",
+    "reason": "MISSING_PROFITABILITY_SNAPSHOT",
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  }
+}

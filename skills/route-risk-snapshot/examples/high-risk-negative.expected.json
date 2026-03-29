@@ -1,0 +1,45 @@
+{
+  "ok": true,
+  "skill": "route-risk-snapshot",
+  "schemaVersion": "1.0.0",
+  "snapshot": {
+    "route": "sbtc_to_usdc",
+    "riskScore": 1,
+    "riskLevel": "HIGH",
+    "signals": {
+      "profitabilitySignal": "NON_POSITIVE",
+      "pnl": -50,
+      "threshold": 100,
+      "accountingUnit": "usd_cents"
+    },
+    "reason": "NON_POSITIVE_PNL_BOOTSTRAP_RISK",
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  },
+  "stateUpdates": {
+    "routeRiskByRoute": {
+      "sbtc_to_usdc": {
+        "schemaVersion": "1.0.0",
+        "route": "sbtc_to_usdc",
+        "riskScore": 1,
+        "riskLevel": "HIGH",
+        "signals": {
+          "profitabilitySignal": "NON_POSITIVE",
+          "pnl": -50,
+          "threshold": 100,
+          "accountingUnit": "usd_cents"
+        },
+        "reason": "NON_POSITIVE_PNL_BOOTSTRAP_RISK",
+        "evaluatedAt": "2026-03-28T00:00:00.000Z"
+      }
+    }
+  },
+  "auditEntry": {
+    "skill": "route-risk-snapshot",
+    "schemaVersion": "1.0.0",
+    "route": "sbtc_to_usdc",
+    "riskScore": 1,
+    "riskLevel": "HIGH",
+    "reason": "NON_POSITIVE_PNL_BOOTSTRAP_RISK",
+    "evaluatedAt": "2026-03-28T00:00:00.000Z"
+  }
+}

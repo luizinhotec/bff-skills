@@ -1,0 +1,9 @@
+{
+  "input": {
+    "route": "missing_route"
+  },
+  "state": {
+    "routeProfitabilityByRoute": {}
+  },
+  "now": "2026-03-28T00:00:00.000Z"
+}
