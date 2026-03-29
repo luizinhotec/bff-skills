@@ -1,4 +1,4 @@
----
+﻿---
 name: route-risk-adjusted-profitability
 description: "Deterministic adjusted-pnl classification using canonical route profitability and risk snapshots from shared state."
 metadata:
@@ -13,7 +13,7 @@ metadata:
 
 # Route Risk Adjusted Profitability
 
-## Responsibility
+## What it does
 
 Transform one route `pnl` snapshot into one deterministic `adjustedPnl` decision by applying an explicit risk penalty from canonical shared state.
 
@@ -218,3 +218,10 @@ Run implementation directly:
 ```bash
 node skills/route-risk-adjusted-profitability/index.cjs skills/route-risk-adjusted-profitability/examples/attractive.json
 ```
+
+
+## Why agents need it
+Downstream consumers need a normalized profitability-under-risk signal.
+
+## Safety notes
+Does not execute routes or transactions. Missing snapshots treated as UNKNOWN.
