@@ -39,6 +39,37 @@ This keeps business reasoning inside reusable skills rather than pushing decisio
 
 ---
 
+## Risk adjustment model
+
+The skill applies a deterministic penalty to profitability based on the canonical route risk score.
+
+Public model:
+
+- `riskPenaltyBps = round(riskScore * 10000)`
+- `adjustedPnl = floor(pnl * (10000 - riskPenaltyBps) / 10000)`
+
+Interpretation:
+
+- `riskScore` is constrained to `[0, 1]`
+- higher risk reduces effective profitability proportionally
+- the adjustment is deterministic and integer-safe
+
+This gives downstream consumers an explicit and auditable rule instead of hidden ranking logic in runtime.
+
+---
+
+## Edge behavior
+
+- `riskScore = 0` -> full profitability is preserved
+- `riskScore = 1` -> profitability is fully neutralized
+- negative `pnl` remains negative and flows to rejection
+- missing profitability snapshot -> `UNKNOWN`
+- missing risk snapshot -> `UNKNOWN`
+
+These cases are covered by local fixtures and frozen expected outputs.
+
+---
+
 ## Deterministic behavior
 
 The skill is deterministic for the same input state.
@@ -65,6 +96,39 @@ It strengthens the catalog by showing explicit composition across days:
 - Day 5 -> profitability-under-risk consumer
 
 This improves comparability across routes while preserving isolated skill boundaries.
+
+---
+
+## Output structure
+
+The skill writes:
+
+```json
+{
+  "routeRiskAdjustedProfitabilityByRoute": {
+    "<route>": {
+      "route": "sbtc_to_usdc",
+      "accountingUnit": "usd_cents",
+      "pnl": 500,
+      "riskScore": 0.5,
+      "riskPenaltyBps": 5000,
+      "adjustedPnl": 250,
+      "threshold": 100,
+      "status": "ATTRACTIVE",
+      "reason": "ADJUSTED_PNL_MEETS_THRESHOLD",
+      "eligible": true,
+      "evaluatedAt": "2026-03-28T00:00:00.000Z"
+    }
+  }
+}
+```
+
+Meaning:
+
+- `pnl` preserves the raw profitability input
+- `riskScore` preserves the canonical route risk input
+- `adjustedPnl` is the normalized profitability-under-risk value
+- `status` makes the result usable for ranking and selection flows
 
 ---
 
@@ -97,5 +161,7 @@ This submission adds a stronger ranking primitive to the catalog:
 - profitability alone can overstate route attractiveness
 - risk alone can over-penalize useful routes
 - risk-adjusted profitability creates a more decision-relevant metric
+
+This skill enables safer capital allocation by preventing high-risk routes from dominating rankings purely based on raw profitability.
 
 This makes downstream route comparison more realistic, modular, and competition-ready.
