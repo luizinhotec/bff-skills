@@ -43,6 +43,8 @@ This keeps business reasoning inside reusable skills rather than pushing decisio
 
 The skill applies a deterministic penalty to profitability based on the canonical route risk score.
 
+This uses a linear risk penalty model expressed in basis points (bps).
+
 Public model:
 
 - `riskPenaltyBps = round(riskScore * 10000)`
@@ -127,6 +129,7 @@ Meaning:
 
 - `pnl` preserves the raw profitability input
 - `riskScore` preserves the canonical route risk input
+- `riskPenaltyBps` makes the penalty model explicit and auditable
 - `adjustedPnl` is the normalized profitability-under-risk value
 - `status` makes the result usable for ranking and selection flows
 
@@ -163,5 +166,7 @@ This submission adds a stronger ranking primitive to the catalog:
 - risk-adjusted profitability creates a more decision-relevant metric
 
 This skill enables safer capital allocation by preventing high-risk routes from dominating rankings purely based on raw profitability.
+
+This skill prevents high-risk routes from dominating rankings purely based on raw profitability, enabling safer and more capital-efficient route selection.
 
 This makes downstream route comparison more realistic, modular, and competition-ready.
