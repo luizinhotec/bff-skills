@@ -260,18 +260,18 @@ if (require.main === module) {
     const output = JSON.stringify(result, null, 2);
 
     if (!result.ok) {
-      console.error(output);
+      process.stdout.write(output + '\n');
       process.exit(1);
     }
 
     process.stdout.write(output + '\n');
   } catch (error) {
-    console.error(JSON.stringify({
+    process.stdout.write(JSON.stringify({
       ok: false,
       skill: SKILL_NAME,
       schemaVersion: SCHEMA_VERSION,
       error: error.message === 'MISSING_INPUT' ? error.message : 'INVALID_JSON_INPUT'
-    }, null, 2));
+    }, null, 2) + '\n');
     process.exit(1);
   }
 }
