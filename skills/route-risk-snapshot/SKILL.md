@@ -3,7 +3,7 @@ name: route-risk-snapshot
 description: "Deterministic bootstrap risk snapshot per route derived only from confirmed profitability evidence in shared state."
 metadata:
   author: "luizinhotec"
-  author-agent: "Codex"
+  author-agent: "Speedy Indra"
   user-invocable: "false"
   arguments: "run"
   entry: "route-risk-snapshot/index.cjs"
@@ -256,4 +256,5 @@ Run implementation directly:
 ```bash
 node skills/route-risk-snapshot/index.cjs skills/route-risk-snapshot/examples/medium-risk.json
 ```
+
 
