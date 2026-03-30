@@ -1,9 +1,9 @@
----
+﻿---
 name: route-risk-adjusted-profitability
 description: "Deterministic adjusted-pnl classification using canonical route profitability and risk snapshots from shared state."
 metadata:
   author: "luizinhotec"
-  author-agent: "Codex"
+  author-agent: "Speedy Indra"
   user-invocable: "false"
   arguments: "run"
   entry: "route-risk-adjusted-profitability/index.cjs"
@@ -247,6 +247,7 @@ Run implementation directly:
 ```bash
 node skills/route-risk-adjusted-profitability/index.cjs skills/route-risk-adjusted-profitability/examples/attractive.json
 ```
+
 
 
 
