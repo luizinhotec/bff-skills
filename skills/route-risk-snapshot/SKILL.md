@@ -1,4 +1,4 @@
-﻿---
+---
 name: route-risk-snapshot
 description: "Deterministic bootstrap risk snapshot per route derived only from confirmed profitability evidence in shared state."
 metadata:
