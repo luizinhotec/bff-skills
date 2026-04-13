@@ -1,0 +1,33 @@
+{
+  "now": "2026-03-27T00:00:00.000Z",
+  "input": {
+    "route": "hbtc_to_btc_l1"
+  },
+  "state": {
+    "routeOperatorByRoute": {
+      "hbtc_to_btc_l1": {
+        "decision": "ALLOW",
+        "protocol": "hermetica"
+      }
+    },
+    "routeHealthByRoute": {
+      "hbtc_to_btc_l1": {
+        "status": "blocked",
+        "reason": "ROUTE_HEALTH_BLOCKED"
+      }
+    },
+    "protocolHealthByProtocol": {
+      "hermetica": {
+        "status": "healthy",
+        "reason": "PROTOCOL_CLEAR"
+      }
+    },
+    "routeScoreByRoute": {
+      "hbtc_to_btc_l1": {
+        "status": "healthy",
+        "reason": "ROUTE_SCORE_OK",
+        "score": 90
+      }
+    }
+  }
+}
